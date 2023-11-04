@@ -9,7 +9,6 @@ import (
 )
 
 func NewGorm(cfg config.DB) (*gorm.DB, error) {
-	const op = "database.gormdb.NewGorm"
 	dns := generateGormDNS(cfg)
 
 	db, err := gorm.Open(postgres.Open(dns), &gorm.Config{})
@@ -26,7 +25,6 @@ func NewGorm(cfg config.DB) (*gorm.DB, error) {
 }
 
 func autoMigrate(db *gorm.DB) error {
-	const op = "database.gormdb.autoMigrate"
 
 	if err := db.AutoMigrate(&entity.Url{}); err != nil {
 		return err
