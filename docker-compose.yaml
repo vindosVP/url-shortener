@@ -1,0 +1,38 @@
+version: '2.1'
+
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    networks:
+      - network
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d url-shortener -U admin"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  url-shortener:
+    container_name: url-shortener
+    networks:
+      - network
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    entrypoint: ./url-shortener
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+
+networks:
+  network:
+    driver: "bridge"
+    external: false
