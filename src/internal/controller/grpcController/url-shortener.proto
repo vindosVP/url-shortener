@@ -1,0 +1,23 @@
+syntax = "proto3";
+option go_package = "github.com/vindosVP/grpcController";
+
+message SaveRequest {
+  string Url = 1;
+}
+
+message SaveResponse {
+  string ShortenedUrl = 1;
+}
+
+message GetRequest {
+  string ShortenedUrl = 1;
+}
+
+message GetResponse {
+  string Url = 1;
+}
+
+service UrlShortener {
+  rpc Save(SaveRequest) returns (SaveResponse);
+  rpc Get(GetRequest) returns (GetResponse);
+}

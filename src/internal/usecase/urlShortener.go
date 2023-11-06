@@ -2,9 +2,9 @@ package usecase
 
 import (
 	"fmt"
+	"github.com/vindosVP/url-shortener/src/internal/cerrors"
+	"github.com/vindosVP/url-shortener/src/internal/pkg/randString"
 	"golang.org/x/exp/slog"
-	"url-shortener/src/internal/cerrors"
-	"url-shortener/src/internal/pkg/randString"
 )
 
 type ShortenerUseCase struct {

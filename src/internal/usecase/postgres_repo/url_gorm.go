@@ -2,9 +2,9 @@ package postgres_repo
 
 import (
 	"fmt"
+	"github.com/vindosVP/url-shortener/src/internal/entity"
 	"golang.org/x/exp/slog"
 	"gorm.io/gorm"
-	"url-shortener/src/internal/entity"
 )
 
 type PostgresRepo struct {

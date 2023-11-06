@@ -2,8 +2,8 @@ package inmemory_repo
 
 import (
 	"fmt"
+	"github.com/vindosVP/url-shortener/src/internal/cerrors"
 	"golang.org/x/exp/slog"
-	"url-shortener/src/internal/cerrors"
 )
 
 type InmemoryRepo struct {
