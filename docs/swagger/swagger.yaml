@@ -1,0 +1,95 @@
+definitions:
+  http.getRequest:
+    properties:
+      url:
+        example: https://mydomain/JAHBG_068H
+        type: string
+    required:
+    - url
+    type: object
+  http.shortenRequest:
+    properties:
+      url:
+        example: https://www.ozon.ru/category/smartfony-15502/
+        type: string
+    required:
+    - url
+    type: object
+  resp.Response:
+    properties:
+      errors:
+        type: string
+      status:
+        type: string
+      url:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Url shortening api
+  title: url-shortener API
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: Get original url by alias
+      operationId: get
+      parameters:
+      - description: Alias
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/http.getRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/resp.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/resp.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resp.Response'
+      summary: Get
+      tags:
+      - url-shortener
+    post:
+      consumes:
+      - application/json
+      description: Save alias for an url
+      operationId: save
+      parameters:
+      - description: Url
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/http.shortenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/resp.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/resp.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resp.Response'
+      summary: Save
+      tags:
+      - url-shortener
+swagger: "2.0"
