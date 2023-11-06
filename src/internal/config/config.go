@@ -12,11 +12,13 @@ type Config struct {
 }
 
 type Server struct {
-	Port string `env:"PORT" envDefault:"8082"`
+	Type     string `env:"SERVER_TYPE"`
+	APIPort  string `env:"API_PORT" envDefault:"8080"`
+	GRPCPort string `env:"GRPC_PORT" envDefault:"8081"`
 }
 
 type DB struct {
-	Host     string `env:"DB_HOST" envDefault:"localhost"`
+	Host     string `env:"DB_HOST" `
 	Port     string `env:"DB_PORT" envDefault:"5432"`
 	User     string `env:"DB_USER"`
 	Pwd      string `env:"DB_PWD"`

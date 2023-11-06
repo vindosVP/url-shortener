@@ -3,11 +3,11 @@ package http
 import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/vindosVP/url-shortener/src/internal/cerrors"
+	"github.com/vindosVP/url-shortener/src/internal/controller/http/resp"
+	"github.com/vindosVP/url-shortener/src/internal/usecase"
 	"golang.org/x/exp/slog"
 	"regexp"
-	"url-shortener/src/internal/cerrors"
-	"url-shortener/src/internal/controller/http/resp"
-	"url-shortener/src/internal/usecase"
 )
 
 type shortenRequest struct {
@@ -84,6 +84,7 @@ func (r *ShortenRoutes) get(c *fiber.Ctx) error {
 		if err == cerrors.ErrAliasForURLDoesNotExist {
 			return resp.ErrorResponse(c, fiber.StatusNotFound, "ulr with this alias does not exist")
 		}
+		log.Error("failed to get original url")
 		return resp.ErrorResponse(c, fiber.StatusInternalServerError, "internal server error")
 	}
 

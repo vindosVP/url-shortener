@@ -2,10 +2,10 @@ package database
 
 import (
 	"fmt"
+	"github.com/vindosVP/url-shortener/src/internal/config"
+	"github.com/vindosVP/url-shortener/src/internal/entity"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"url-shortener/src/internal/config"
-	"url-shortener/src/internal/entity"
 )
 
 func NewGorm(cfg config.DB) (*gorm.DB, error) {

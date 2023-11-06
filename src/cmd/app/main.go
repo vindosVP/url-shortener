@@ -1,12 +1,12 @@
 package main
 
 import (
+	"github.com/vindosVP/url-shortener/src/internal/app"
+	"github.com/vindosVP/url-shortener/src/internal/config"
+	"github.com/vindosVP/url-shortener/src/internal/pkg/logger"
 	"golang.org/x/exp/slog"
 	stdlog "log"
 	"os"
-	"url-shortener/src/internal/app"
-	"url-shortener/src/internal/config"
-	"url-shortener/src/internal/pkg/logger"
 )
 
 const (
@@ -26,6 +26,7 @@ func main() {
 	log.Info(
 		"starting url-shortener",
 		slog.String("env", cfg.Env),
+		slog.String("server_type", cfg.Server.Type),
 	)
 	log.Debug("debug mode enabled")
 

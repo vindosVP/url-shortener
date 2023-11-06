@@ -2,8 +2,8 @@ package http
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/vindosVP/url-shortener/src/internal/usecase"
 	"golang.org/x/exp/slog"
-	"url-shortener/src/internal/usecase"
 )
 
 // SetupRoutes -.
