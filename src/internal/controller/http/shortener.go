@@ -14,8 +14,8 @@ type shortenRequest struct {
 	URL string `json:"url" binding:"required" example:"https://www.ozon.ru/category/smartfony-15502/" validate:"required,url"`
 }
 
-type GetRequest struct {
-	ShortenedURL string `json:"url" binding:"required" example:"https://mydomain/JAHBG_068H" validate:"required,url"`
+type getRequest struct {
+	URL string `json:"url" binding:"required" example:"https://mydomain/JAHBG_068H" validate:"required,url"`
 }
 
 type ShortenRoutes struct {
@@ -32,6 +32,17 @@ func SetupShortenRoutes(handler fiber.Router, s usecase.Shortener, l *slog.Logge
 	handler.Post("", r.save)
 }
 
+// @Summary     Get
+// @Description Get original url by alias
+// @ID          get
+// @Tags  	    url-shortener
+// @Accept      json
+// @Produce     json
+// @Param       request body getRequest true "Alias"
+// @Success     200 {object} resp.Response
+// @Failure     400 {object} resp.Response
+// @Failure     500 {object} resp.Response
+// @Router      / [get]
 func (r *ShortenRoutes) get(c *fiber.Ctx) error {
 	const op = "controller.http.get"
 
@@ -40,7 +51,7 @@ func (r *ShortenRoutes) get(c *fiber.Ctx) error {
 		slog.String("request_id", c.Locals("request-id").(string)),
 	)
 
-	req := &shortenRequest{}
+	req := &getRequest{}
 	if err := c.BodyParser(req); err != nil {
 		log.Error("failed to decode request body")
 		return resp.ErrorResponse(c, fiber.StatusInternalServerError, "failed to decode request body")
@@ -79,6 +90,17 @@ func (r *ShortenRoutes) get(c *fiber.Ctx) error {
 	return resp.OkResponse(c, fiber.StatusOK, originalURL)
 }
 
+// @Summary     Save
+// @Description Save alias for an url
+// @ID          save
+// @Tags  	    url-shortener
+// @Accept      json
+// @Produce     json
+// @Param       request body shortenRequest true "Url"
+// @Success     200 {object} resp.Response
+// @Failure     400 {object} resp.Response
+// @Failure     500 {object} resp.Response
+// @Router      / [post]
 func (r *ShortenRoutes) save(c *fiber.Ctx) error {
 	const op = "controller.http.save"
 
