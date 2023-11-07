@@ -85,7 +85,7 @@ func (r *ShortenRoutes) get(c *fiber.Ctx) error {
 			return resp.ErrorResponse(c, fiber.StatusNotFound, "ulr with this alias does not exist")
 		}
 		log.Error("failed to get original url")
-		return resp.ErrorResponse(c, fiber.StatusInternalServerError, "internal server error")
+		return resp.ErrorResponse(c, fiber.StatusInternalServerError, "failed to get original url")
 	}
 
 	return resp.OkResponse(c, fiber.StatusOK, originalURL)
