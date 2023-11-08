@@ -27,17 +27,50 @@ Service to create shortened urls
 
 If you need to change the default values, you can do it in [.env](./.env)
 
-### Sart
-
 1. Clone the GitHub repo
+
 ```Shell
 git clone https://github.com/vindosVP/url-shortener.git
 ```
-2. Start docker-compose
+
+### 🐳 Start in docker
+
+```Shell
+cd url-shortener
+```
 
 ```Shell
 docker-compose up
 ```
+
+### 🖥️ Start on local machine
+
+1. Set up env variables (example in [.env](./.env))
+
+2. Execute following lines
+
+```Shell
+cd url-shortener
+```
+
+```Shell
+make build
+```
+
+```Shell
+./url-shortener
+```
+
+### 📄 Testing
+
+1. Execute following lines
+```Shell
+cd url-shortener
+```
+```Shell
+make test 
+```
+
 ### 📖 Docs
 
 API documentation: [swagger](/docs/swagger/swagger.yaml)
