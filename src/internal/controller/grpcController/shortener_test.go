@@ -2,13 +2,16 @@ package grpcController_test
 
 import (
 	"context"
+	"errors"
 	"github.com/stretchr/testify/require"
 	"github.com/vindosVP/url-shortener/src/internal/cerrors"
 	"github.com/vindosVP/url-shortener/src/internal/controller/grpcController"
 	"github.com/vindosVP/url-shortener/src/internal/pkg/logger/discardLogger"
 	"github.com/vindosVP/url-shortener/src/internal/usecase/mocks"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/status"
 	"google.golang.org/grpc/test/bufconn"
 	"log"
 	"net"
@@ -43,14 +46,30 @@ func TestGet(t *testing.T) {
 			name:      "Invalid url 1",
 			req:       &grpcController.GetRequest{ShortenedUrl: "invalid url"},
 			checkResp: false,
-			expErr:    cerrors.ErrInvalidUrl,
+			expErr:    status.Error(codes.InvalidArgument, cerrors.ErrInvalidUrl.Error()),
 		},
 		{
 			name:        "Invalid url 2",
 			mockPattern: true,
 			req:         &grpcController.GetRequest{ShortenedUrl: "https://testdomain.com/AHJDVU89_?"},
 			checkResp:   false,
-			expErr:      cerrors.ErrInvalidUrl,
+			expErr:      status.Error(codes.InvalidArgument, cerrors.ErrInvalidUrl.Error()),
+		},
+		{
+			name:                 "Alias does not exist",
+			mockPattern:          true,
+			req:                  &grpcController.GetRequest{ShortenedUrl: "https://testdomain.com/AHJDVU89_0"},
+			checkResp:            false,
+			mockGetOriginalError: cerrors.ErrAliasForURLDoesNotExist,
+			expErr:               status.Error(codes.NotFound, cerrors.ErrAliasForURLDoesNotExist.Error()),
+		},
+		{
+			name:                 "Unexpected error",
+			mockPattern:          true,
+			req:                  &grpcController.GetRequest{ShortenedUrl: "https://testdomain.com/AHJDVU89_0"},
+			checkResp:            false,
+			mockGetOriginalError: errors.New("unexpected error"),
+			expErr:               status.Error(codes.Internal, "failed to get original url"),
 		},
 	}
 
@@ -114,10 +133,8 @@ func TestGet(t *testing.T) {
 				require.Equal(t, tc.resp.Url, resp.Url)
 			}
 			if tc.expErr != nil {
-				// не успел разобраться как проверять ошибки
-				require.NotNil(t, err)
+				require.ErrorIs(t, err, tc.expErr)
 			}
-
 		})
 	}
 
@@ -147,7 +164,14 @@ func TestSave(t *testing.T) {
 			name:      "Invalid url",
 			req:       &grpcController.SaveRequest{Url: "invalid url"},
 			checkResp: false,
-			expErr:    cerrors.ErrInvalidUrl,
+			expErr:    status.Error(codes.InvalidArgument, cerrors.ErrInvalidUrl.Error()),
+		},
+		{
+			name:          "Unexpected error",
+			req:           &grpcController.SaveRequest{Url: "https://github.com/vindosVP"},
+			checkResp:     false,
+			expErr:        status.Error(codes.Internal, "failed to save alias"),
+			mockSaveError: errors.New("unexpected error"),
 		},
 	}
 
@@ -207,8 +231,7 @@ func TestSave(t *testing.T) {
 				require.Equal(t, tc.resp.ShortenedUrl, resp.ShortenedUrl)
 			}
 			if tc.expErr != nil {
-				// не успел разобраться как проверять ошибки
-				require.NotNil(t, err)
+				require.ErrorIs(t, err, tc.expErr)
 			}
 
 		})
